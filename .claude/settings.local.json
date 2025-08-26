@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir:*)",
+      "Bash(pnpm test)",
+      "Bash(pnpm install:*)",
+      "WebFetch(domain:classrankcalculator.xyz)",
+      "Bash(pnpm add recharts)"
+    ],
+    "deny": [],
+    "ask": [],
+    "defaultMode": "acceptEdits"
+  }
+}

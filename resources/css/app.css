@@ -1,0 +1,70 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Basic body styling */
+        body {
+            font-family: 'roboto', sans-serif;
+            color: theme('colors.brand-text-dark');
+        }
+        /* Hero section background image */
+        .hero-section {
+            background: linear-gradient(rgba(54, 69, 79, 0.6), rgba(54, 69, 79, 0.6)), url('https://images.unsplash.com/photo-1556911220-bff31c812dba?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80') no-repeat center center;
+            background-size: cover;
+        }
+        /* Service card image height */
+        .service-card-img {
+            height: 250px;
+            object-fit: cover;
+        }
+        /* Testimonial image */
+        .testimonial-img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 3px solid theme('colors.brand-light-blue');
+        }
+        .testimonial-card {
+            min-height: 220px; /* Ensure consistent height */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        /* FAQ styling */
+        .faq-question svg {
+            transition: transform 0.3s ease;
+        }
+        .faq-question.open svg {
+            transform: rotate(180deg);
+        }
+        .main-gallery-image {
+            height: 450px;
+            object-fit: cover;
+        }
+        .thumbnail {
+            @apply w-24 h-20 object-cover rounded-md cursor-pointer border-2 border-transparent hover:border-accent transition;
+        }
+        .thumbnail.active {
+             @apply border-accent ring-2 ring-accent/50;
+        }
+        .gallery-scroll::-webkit-scrollbar { display: none; }
+        .gallery-scroll { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* New Gallery Style */
+        .gallery-item {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .gallery-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .faq-answer.open {
+            max-height: 200px;
+        }
+        .section-animate {
+            opacity: 0;
+        }
+        .section-animate.visible {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
