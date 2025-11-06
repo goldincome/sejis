@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Front;
 
+use App\Enums\OrderStatusEnum;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Services\OrderService;
@@ -100,11 +101,11 @@ class UserDashboardController extends Controller
             ->where('user_id', $user->id)
             ->with(['orderDetails.product', 'user'])
             ->firstOrFail();
-        
-        if (!in_array($order->status, ['paid', 'completed', 'delivered'])) {
+       
+        if (!in_array($order->status->value, OrderStatusEnum::toArray() )) {
             return back()->with('error', 'Invoice is only available for paid orders.');
         }
-        
+
         return $this->orderService->generateInvoicePDF($order);
     }
 

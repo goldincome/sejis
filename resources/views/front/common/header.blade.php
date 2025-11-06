@@ -37,6 +37,12 @@
                            {{ request()->routeIs('user.*')  ? 'text-black-300 font-medium border-b-4 border-orange-300 pb-1' : '' }}">
                            User
                            Panel</a>
+                    @else
+                        <a href="{{ route('login') }}"
+                           class="px-4 py-2 bg-white text-brand-deep-ash font-semibold rounded-md hover:bg-light-blue transition duration-300 
+                           {{ request()->routeIs('user.*')  ? 'text-black-300 font-medium border-b-4 border-orange-300 pb-1' : '' }}">
+                           Login
+                        </a>
                    @endauth
                    @if (Cart::count() > 0)
                        <a href="{{ route('cart.index') }}"

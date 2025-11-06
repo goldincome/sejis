@@ -1,6 +1,7 @@
 <?php
 namespace App\Services;
 
+use App\Enums\OrderStatusEnum;
 use App\Models\User;
 use App\Models\Order;
 use App\Models\OrderDetail;
@@ -40,7 +41,7 @@ class OrderService
             'sub_total' => Cart::subtotal(2, '.', ''),
             'tax' => Cart::tax(2, '.', ''),
             'currency' => config('cashier.currency'),
-            'status' => PaymentStatusEnum::Pending->value,
+            'status' => OrderStatusEnum::PAID->value,
         ]);
         
         //create order details
@@ -621,19 +622,20 @@ class OrderService
      */
     public function generateInvoicePDF(Order $order)
     {
+        $settingsService = app(SettingsService::class);
         $data = [
             'order' => $order,
             'company' => [
-                'name' => config('app.name'),
-                'address' => setting('company_address', 'Company Address'),
-                'phone' => setting('company_phone', 'Phone Number'),
-                'email' => setting('company_email', 'info@company.com')
+                'name' => $settingsService->get('site_name'),
+                'address' => $settingsService->get('contact_address'),
+                'phone' => $settingsService->get('contact_phone'),
+                'email' => $settingsService->get('contact_email')
             ]
         ];
         
         $pdf = Pdf::loadView('pdf.invoice', $data);
         
-        return $pdf->download('invoice-' . $order->reference . '.pdf');
+        return $pdf->download('invoice-' . $order->order_no . '.pdf');
     }
 
     /**

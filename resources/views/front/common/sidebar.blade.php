@@ -7,9 +7,9 @@
                                     <i class="fas fa-tachometer-alt mr-3 text-lg"></i>
                                     Dashboard
                                 </a>
-                                <a href="{{ route('user.orders') }}" class="group flex items-center px-4 py-3 {{ (request()->routeIs('user.orders') || request()->routeIs('user.order.details') ) ? 'text-brand-deep-ash bg-brand-light-blue rounded-lg font-bold' : 'text-gray-700 hover:bg-gray-100 rounded-lg transition-colors'}}"><i class="fas fa-calendar-alt mr-3"></i>My Bookings</a>
-                                <a href="{{ route('user.profile.edit') }}" class="group flex items-center px-4 py-3 {{ (request()->routeIs('user.profile.edit') || request()->routeIs('user.order.details') ) ? 'text-brand-deep-ash bg-brand-light-blue rounded-lg font-bold' : 'text-gray-700 hover:bg-gray-100 rounded-lg transition-colors'}}"><i class="fas fa-user-circle mr-3"></i>Profile Settings</a>
-                                 <a href="{{ route('user.change.password') }}" class="group flex items-center px-4 py-3 {{ (request()->routeIs('user.change.password') || request()->routeIs('user.order.details') ) ? 'text-brand-deep-ash bg-brand-light-blue rounded-lg font-bold' : 'text-gray-700 hover:bg-gray-100 rounded-lg transition-colors'}}"><i class="fas fa-user-circle mr-3"></i>Change Password</a>
+                                <a href="{{ route('user.orders') }}" class="group flex items-center px-4 py-3 {{ (request()->routeIs('user.order.details') || request()->routeIs('user.orders') ) ? 'text-brand-deep-ash bg-brand-light-blue rounded-lg font-bold' : 'text-gray-700 hover:bg-gray-100 rounded-lg transition-colors'}}"><i class="fas fa-calendar-alt mr-3"></i>My Bookings</a>
+                                <a href="{{ route('user.profile.edit') }}" class="group flex items-center px-4 py-3 {{ (request()->routeIs('user.profile.edit') ) ? 'text-brand-deep-ash bg-brand-light-blue rounded-lg font-bold' : 'text-gray-700 hover:bg-gray-100 rounded-lg transition-colors'}}"><i class="fas fa-user-circle mr-3"></i>Profile Settings</a>
+                                 <a href="{{ route('user.change.password') }}" class="group flex items-center px-4 py-3 {{ (request()->routeIs('user.change.password') ) ? 'text-brand-deep-ash bg-brand-light-blue rounded-lg font-bold' : 'text-gray-700 hover:bg-gray-100 rounded-lg transition-colors'}}"><i class="fas fa-user-circle mr-3"></i>Change Password</a>
                     
                     
 

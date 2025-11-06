@@ -220,6 +220,10 @@
     </style>
 </head>
 <body>
+    @php
+        use App\Enums\OrderStatusEnum;
+        use App\Enums\ProductTypeEnum; // Import ProductTypeEnum
+    @endphp
     <div class="invoice-container">
         <!-- Header -->
         <div class="header">
@@ -234,7 +238,7 @@
             <div class="header-right">
                 <div class="invoice-title">INVOICE</div>
                 <div class="invoice-meta">
-                    <strong>Invoice #:</strong> {{ $order->reference }}<br>
+                    <strong>Invoice #:</strong> {{ $order->order_no }}<br>
                     <strong>Date:</strong> {{ $order->created_at->format('M d, Y') }}<br>
                     @if($order->paid_at)
                     <strong>Paid:</strong> {{ $order->paid_at->format('M d, Y') }}
@@ -264,11 +268,11 @@
                     <strong>Order #:</strong> {{ $order->order_no }}<br>
                     <strong>Reference:</strong> {{ $order->reference }}<br>
                     <strong>Status:</strong> 
-                    <span class="status-badge status-{{ $order->status === 'paid' ? 'paid' : 'pending' }}">
-                        {{ ucfirst($order->status) }}
+                    <span class="status-badge status-{{ $order->status->value === OrderStatusEnum::PAID->value ? OrderStatusEnum::PAID->value : OrderStatusEnum::PENDING->value }}">
+                        {{ ucfirst($order->status->value) }}
                     </span><br>
-                    @if($order->payment_gateway)
-                    <strong>Payment Method:</strong> {{ ucfirst($order->payment_gateway) }}<br>
+                    @if($order->payment_method)
+                    <strong>Payment Method:</strong> {{ ucfirst($order->payment_method) }}<br>
                     @endif
                     @if($order->transaction_id)
                     <strong>Transaction ID:</strong> {{ $order->transaction_id }}
@@ -292,21 +296,48 @@
                 <tr>
                     <td>
                         <strong>{{ $detail->name }}</strong>
-                        @if($detail->booked_date)
-                        <div class="booking-info">
-                            <strong>📅 Booking Date:</strong> {{ \Carbon\Carbon::parse($detail->booked_date)->format('M d, Y') }}
-                            @if($detail->booked_durations)
+                        
+                        {{-- START: DYNAMIC CONTENT --}}
+                        @if($detail->product_type == ProductTypeEnum::ITEM_RENTAL->value)
+                            <div class="booking-info">
+                                <strong>Start Date:</strong> {{ \Carbon\Carbon::parse($detail->start_date)->format('M d, Y') }}<br>
+                                <strong>End Date:</strong> {{ \Carbon\Carbon::parse($detail->end_date)->format('M d, Y') }}
                                 @php
-                                    $duration = json_decode($detail->booked_durations, true);
+                                    $startDate = \Carbon\Carbon::parse($detail->start_date);
+                                    $endDate = \Carbon\Carbon::parse($detail->end_date);
+                                    $durationInDays = $startDate->diffInDays($endDate) + 1;
                                 @endphp
-                                @if(isset($duration['time_slot']))
-                                <br><strong>🕐 Time Slot:</strong> {{ $duration['time_slot'] }}
+                                <br><strong>Duration:</strong> {{ $durationInDays }} day(s)
+                            </div>
+                        @elseif($detail->product_type == ProductTypeEnum::KITCHEN_RENTAL->value)
+                            @if($detail->booked_date)
+                            <div class="booking-info">
+                                <strong>📅 Booking Date:</strong> {{ \Carbon\Carbon::parse($detail->booked_date)->format('M d, Y') }}
+                                @if($detail->booked_durations)
+                                    @php
+                                        $duration = json_decode($detail->booked_durations, true);
+                                    @endphp
+                                    
+                                    <br><strong>🕐 Time Slot:</strong> <br/>
+                                    
+                                    @foreach ( $duration as $bookedTime)
+                                        {{ \Carbon\Carbon::parse($bookedTime['startDate'])->format('g:i A') }}-{{ \Carbon\Carbon::parse($bookedTime['endDate'])->format('g:i A') }}</br>
+                                    @endforeach
                                 @endif
+                            </div>
                             @endif
-                        </div>
+                        @endif
+                        {{-- END: DYNAMIC CONTENT --}}
+
+                    </td>
+                    <td class="text-center">
+                        {{ $detail->quantity }}
+                        @if($detail->product_type == ProductTypeEnum::ITEM_RENTAL->value)
+                            unit(s)
+                        @else
+                            hour(s)
                         @endif
                     </td>
-                    <td class="text-center">{{ $detail->quantity }}</td>
                     <td class="text-right">£{{ number_format($detail->price, 2) }}</td>
                     <td class="text-right">£{{ number_format($detail->sub_total, 2) }}</td>
                 </tr>

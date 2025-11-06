@@ -168,7 +168,7 @@
                     <p class="text-gray-600 text-sm mb-4"> Have questions about the checkout process or our services?
                         Our team is here to help!
                     </p>
-                    <a href="contact-us.html"
+                    <a href="{{ route('contact-us') }}"
                         class="text-sm font-medium text-orange-600 hover:text-orange-700 hover:underline"> Contact
                         Support <i class="fas fa-arrow-right ml-1"></i> </a>
                 </div>

@@ -78,6 +78,7 @@
             <div class="px-6 py-4 bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-gray-200">
                 <div class="flex flex-col md:flex-row md:items-center md:justify-between">
                     <div>
+                        @include('front.common.error-and-message')
                         <h1 class="text-2xl font-bold text-gray-900">Order #{{ $order->order_no }}</h1>
                         <p class="text-sm text-gray-600 mt-1">
                             Placed on {{ $order->created_at->format('F d, Y \a\t h:i A') }}
@@ -107,7 +108,7 @@
                             Download Invoice
                         </a>
                     @endif
-
+                    {{--
                     @can('cancel', $order)
                         <button onclick="cancelOrder()" 
                                 class="action-button inline-flex items-center px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-md hover:bg-red-700">
@@ -117,7 +118,7 @@
                             Cancel Order
                         </button>
                     @endcan
-
+                    --}}
                     @can('requestRefund', $order)
                         <button onclick="requestRefund()" 
                                 class="action-button inline-flex items-center px-4 py-2 bg-orange-600 text-white text-sm font-medium rounded-md hover:bg-orange-700">
@@ -194,7 +195,8 @@
                                                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                                                 </svg>
-                                                Start Date: {{ \Carbon\Carbon::parse($detail->start_date)->format('M d, Y') }}
+                                                Start Date: {{ \Carbon\Carbon::parse($detail->start_date)->format('M d, Y') }}<br/>
+                                                
                                             </div>
                                             <div class="flex items-center">
                                                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -230,14 +232,18 @@
                                                 @php
                                                     $duration = json_decode($detail->booked_durations, true);
                                                 @endphp
-                                                @if(isset($duration['time_slot']))
+                                                
                                                 <div class="flex items-center">
                                                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                                     </svg>
-                                                    Time: {{ $duration['time_slot'] }}
+                                                    Time Slot: <br/>
+                                                   
+                                                    @foreach ( $duration as $bookedTime)
+                                                        {{ \Carbon\Carbon::parse($bookedTime['startDate'])->format('g:i A') }}-{{ \Carbon\Carbon::parse($bookedTime['endDate'])->format('g:i A') }}</br>
+                                                    @endforeach
                                                 </div>
-                                                @endif
+                                                
                                             @endif
                                         @endif
                                         {{-- END: DYNAMIC CONTENT --}}
