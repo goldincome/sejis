@@ -225,8 +225,7 @@ class OrderService
         
         if (!empty($filters['search'])) {
             $query->where(function ($q) use ($filters) {
-                $q->where('reference', 'like', '%' . $filters['search'] . '%')
-                  ->orWhere('order_no', 'like', '%' . $filters['search'] . '%')
+                $q->Where('order_no', 'like', '%' . $filters['search'] . '%')
                   ->orWhereHas('orderDetails', function ($orderDetailQuery) use ($filters) {
                       $orderDetailQuery->where('name', 'like', '%' . $filters['search'] . '%');
                   });
