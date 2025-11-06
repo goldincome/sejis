@@ -30,7 +30,7 @@
                             <p class="text-gray-900 whitespace-no-wrap">{{ $order->user->name ?? 'N/A' }}</p>
                         </td>
                         <td class="px-5 py-4 border-b border-gray-200 bg-white text-sm">
-                            <p class="text-gray-900 whitespace-no-wrap">{{ $order->currency }} {{ number_format($order->total, 2) }}</p>
+                            <p class="text-gray-900 whitespace-no-wrap"> {{ currencyFormatter($order->total) }}</p>
                         </td>
                         <td class="px-5 py-4 border-b border-gray-200 bg-white text-sm">
                              <p class="text-gray-900 whitespace-no-wrap">{{ $order->payment_method }}</p>
@@ -49,16 +49,17 @@
                                 <a href="{{ route('admin.orders.show', $order) }}" class="text-blue-500 hover:text-blue-700" title="View">
                                     <i class="fas fa-eye"></i>
                                 </a>
-                                <a href="{{ route('admin.orders.edit', $order) }}" class="text-yellow-500 hover:text-yellow-700" title="Edit">
-                                    <i class="fas fa-pencil-alt"></i>
-                                </a>
-                                <form action="{{ route('admin.orders.destroy', $order) }}" method="POST" onsubmit="return confirm('Are you sure? This will also delete order details.');" class="inline-block">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="text-red-500 hover:text-red-700" title="Delete">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </form>
+                                @if(auth()->user()->isSuperAdmin())
+                                    {{--
+                                    <form action="{{ route('admin.orders.destroy', $order) }}" method="POST" onsubmit="return confirm('Are you sure? This will also delete order details.');" class="inline-block">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="text-red-500 hover:text-red-700" title="Delete">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                        --}}
+                                    </form>
+                                @endif
                             </div>
                         </td>
                     </tr>

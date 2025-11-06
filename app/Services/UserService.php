@@ -43,10 +43,14 @@ class UserService
      */
     public function createUser(array $data): User
     {
+        if(auth()->user()->isSuperAdmin()){
+            $data['user_type'] = UserTypeEnum::ADMIN->value;
+        }
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'user_type' => $data['user_type'] ?? UserTypeEnum::CUSTOMER->value,
         ]);
     }
 

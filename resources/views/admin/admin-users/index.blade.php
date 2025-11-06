@@ -5,9 +5,11 @@
     <main class="flex-1 p-6">
     <div class="flex justify-between items-center mb-6">
         <h1 class="text-3xl font-bold text-gray-800">Users</h1>
-        <a href="{{ route('admin.admins.create') }}" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300">
-            <i class="fas fa-plus mr-2"></i>Create New User
-        </a>
+        @if(auth()->user()->isSuperAdmin())
+            <a href="{{ route('admin.admins.create') }}" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300">
+                <i class="fas fa-plus mr-2"></i>Create New User
+            </a>
+        @endif
     </div>
 
     <div class="bg-white shadow-md rounded-lg overflow-hidden">
@@ -52,16 +54,19 @@
                                 <a href="{{ route('admin.admins.show', $user) }}" class="text-blue-500 hover:text-blue-700" title="View">
                                     <i class="fas fa-eye"></i>
                                 </a>
-                                <a href="{{ route('admin.admins.edit', $user) }}" class="text-yellow-500 hover:text-yellow-700" title="Edit">
-                                    <i class="fas fa-pencil-alt"></i>
-                                </a>
-                                <form action="{{ route('admin.admins.destroy', $user) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this user?');" class="inline-block">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="text-red-500 hover:text-red-700" title="Delete">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </form>
+                                @if(auth()->user()->isSuperAdmin())
+                                    <a href="{{ route('admin.admins.edit', $user) }}" class="text-yellow-500 hover:text-yellow-700" title="Edit">
+                                        <i class="fas fa-pencil-alt"></i>
+                                    </a>
+                                
+                                    <form action="{{ route('admin.admins.destroy', $user) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this user?');" class="inline-block">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="text-red-500 hover:text-red-700" title="Delete">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                @endif
                             </div>
                         </td>
                     </tr>

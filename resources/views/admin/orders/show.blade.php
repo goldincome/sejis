@@ -77,7 +77,7 @@
                                 {{-- END: ADDED DYNAMIC CONTENT --}}
 
                             </td>
-                            <td class="px-4 py-3 whitespace-nowrap">{{ $order->currency }} {{ number_format($detail->price, 2) }}</td>
+                            <td class="px-4 py-3 whitespace-nowrap"> {{ currencyFormatter($detail->price) }}</td>
                             <td class="px-4 py-3 whitespace-nowrap">
                                 {{ $detail->quantity }} 
                                 @if($detail->product_type == ProductTypeEnum::ITEM_RENTAL->value) 
@@ -86,7 +86,7 @@
                                     hour(s)
                                 @endif
                             </td>
-                            <td class="px-4 py-3 whitespace-nowrap text-right">{{ $order->currency }} {{ number_format($detail->sub_total, 2) }}</td>
+                            <td class="px-4 py-3 whitespace-nowrap text-right"> {{ currencyFormatter($detail->sub_total) }}</td>
                         </tr>
                         @endforeach
                     </tbody>
@@ -97,15 +97,15 @@
                 <div class="w-full max-w-sm">
                     <div class="flex justify-between py-2 border-b">
                         <span class="text-gray-600">Subtotal</span>
-                        <span class="font-semibold text-gray-900">{{ $order->currency }} {{ number_format($order->sub_total, 2) }}</span>
+                        <span class="font-semibold text-gray-900"> {{ currencyFormatter($order->sub_total) }}</span>
                     </div>
                     <div class="flex justify-between py-2 border-b">
                         <span class="text-gray-600">Tax</span>
-                        <span class="font-semibold text-gray-900">{{ $order->currency }} {{ number_format($order->tax, 2) }}</span>
+                        <span class="font-semibold text-gray-900"> {{ currencyFormatter($order->tax) }}</span>
                     </div>
                     <div class="flex justify-between py-2 text-lg font-bold">
                         <span class="text-gray-900">Total</span>
-                        <span class="text-gray-900">{{ $order->currency }} {{ number_format($order->total, 2) }}</span>
+                        <span class="text-gray-900"> {{ currencyFormatter($order->total) }}</span>
                     </div>
                 </div>
             </div>

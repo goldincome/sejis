@@ -23,6 +23,7 @@ class AdminController extends Controller
     public function index()
     {
         $users = $this->userService->getAllAdmins();
+
         return view('admin.admin-users.index', compact('users'));
     }
 
@@ -39,6 +40,9 @@ class AdminController extends Controller
      */
     public function store(StoreUserRequest $request)
     {
+        if(!auth()->user()->isSuperAdmin()){
+            return back()->with('error', 'You do not have permission to create admin user');
+        }
         $this->userService->createUser($request->validated());
 
         return redirect()->route('admin.admins.index')
@@ -68,6 +72,9 @@ class AdminController extends Controller
      */
     public function update(UpdateUserRequest $request, User $admin)
     {
+        if(!auth()->user()->isSuperAdmin()){
+            return back()->with('error', 'You do not have permission to update admin user');
+        }
         $this->userService->updateUser($admin, $request->validated());
 
         return redirect()->route('admin.admins.index')
@@ -79,6 +86,9 @@ class AdminController extends Controller
      */
     public function destroy(User $admin)
     {
+         if(!auth()->user()->isSuperAdmin()){
+            return back()->with('error', 'You do not have permission to delete this record');
+        }
         $this->userService->deleteUser($admin);
 
         return redirect()->route('admin.admins.index')

@@ -49,11 +49,13 @@
                 </div>
             </div>
         </div>
-        <div class="mt-8 pt-6 border-t flex justify-end">
-             <a href="{{ route('admin.admins.edit', $user) }}" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-6 rounded-lg transition duration-300">
-                <i class="fas fa-pencil-alt mr-2"></i>Edit User
-            </a>
-        </div>
+         @if(auth()->user()->isSuperAdmin())
+            <div class="mt-8 pt-6 border-t flex justify-end">
+                <a href="{{ route('admin.admins.edit', $user) }}" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-6 rounded-lg transition duration-300">
+                    <i class="fas fa-pencil-alt mr-2"></i>Edit User
+                </a>
+            </div>
+        @endif
     </div>
 </main>
 @endsection

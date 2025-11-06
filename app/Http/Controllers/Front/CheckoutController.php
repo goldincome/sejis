@@ -9,17 +9,20 @@ use App\Enums\ProductTypeEnum;
 use App\Services\OrderService;
 use App\Enums\PaymentMethodEnum;
 use App\Services\PaymentService;
+use App\Services\SettingsService;
 use App\Http\Controllers\Controller;
 
 class CheckoutController extends Controller
 {
      protected $paymentService;
     protected $cartService;
-
-    public function __construct(PaymentService $paymentService, CartService $cartService)
+    protected $settingsService;
+    public function __construct(PaymentService $paymentService, CartService $cartService,
+       SettingsService $settingsService )
     {
         $this->paymentService = $paymentService;
         $this->cartService = $cartService;
+        $this->settingsService = $settingsService;
     }
 
     public function index()
@@ -34,13 +37,13 @@ class CheckoutController extends Controller
            $paymentMethods = PaymentMethodEnum::class;
             // Create a Stripe Setup Intent
             $intent = auth()->user()->createSetupIntent();
-           
+           $settingsService = $this->settingsService;
 
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Error no product to checkout: ' . $e->getMessage())->withInput();
         }
 
-        return view('front.checkout.index', compact('cartItems', 'intent', 'productType', 'paymentMethods'));
+        return view('front.checkout.index', compact('settingsService','cartItems', 'intent', 'productType', 'paymentMethods'));
     }
 
      /**

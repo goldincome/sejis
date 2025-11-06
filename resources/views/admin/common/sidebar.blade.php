@@ -51,6 +51,11 @@
             <i class="fas fa-cog w-8 text-center text-lg"></i>
             <span>Opening Days</span>
         </a>
+        <a href="{{ route('admin.settings.index') }}"
+            class="{{ request()->routeIs('admin.settings.*') ? 'active' : '' }} flex items-center px-4 py-3 rounded-lg hover:bg-brand-deep-ash-lighter transition-colors">
+            <i class="fas fa-cog w-8 text-center text-lg"></i>
+            <span>Site Settings</span>
+        </a>
     </nav>
     <!-- Logout Button -->
     <div class="p-4 border-t border-brand-deep-ash-lighter">

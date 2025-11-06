@@ -7,7 +7,10 @@ use App\Services\SettingsService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Log\Logger;
 use Illuminate\View\View;
+
+use function Illuminate\Log\log;
 
 class SettingController extends Controller
 {
@@ -19,16 +22,17 @@ class SettingController extends Controller
      * Display a listing of the resource.
      */
     public function index(): View
-    {
+    { 
+        $user = auth()->user();
         $settings = Setting::orderBy('group')
-            ->orderBy('key')
-            ->paginate(20);
-            
+                ->orderBy('key')
+                ->paginate(20);
+           
         $groups = Setting::distinct('group')
-            ->pluck('group')
-            ->sort();
-            
-        return view('admin.settings.index', compact('settings', 'groups'));
+                ->pluck('group')
+                ->sort();
+ 
+        return view('admin.settings.index', compact('user', 'settings', 'groups'));
     }
 
     /**
@@ -45,6 +49,9 @@ class SettingController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        if(!auth()->user()->isSuperAdmin()){
+            return back()->with('error', 'You do not have permission to create setttings');
+        }
         $validated = $request->validate([
             'key' => 'required|string|max:255|unique:settings,key',
             'value' => 'nullable',
@@ -83,6 +90,10 @@ class SettingController extends Controller
      */
     public function update(Request $request, Setting $setting): RedirectResponse
     {
+        if(!auth()->user()->isSuperAdmin()){
+            return back()->with('error', 'You do not have permission to update record');
+        }
+
         $validated = $request->validate([
             'key' => 'required|string|max:255|unique:settings,key,' . $setting->id,
             'value' => 'nullable',
@@ -104,6 +115,9 @@ class SettingController extends Controller
      */
     public function destroy(Setting $setting): RedirectResponse
     {
+        if(!auth()->user()->isSuperAdmin()){
+            return back()->with('error', 'You do not have permission to delete this record');
+        }
         $setting->delete();
         
         return redirect()->route('admin.settings.index')
