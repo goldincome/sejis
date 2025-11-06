@@ -1,5 +1,10 @@
 @extends('layouts.admin')
 @section('header', 'Order Details')
+
+@php
+    use App\Enums\ProductTypeEnum; // Import the Enum to use in the view
+@endphp
+
 @section('content')
 <main class="flex-1 p-6">
     <div class="flex justify-between items-center mb-6">
@@ -36,14 +41,51 @@
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
-                        @foreach($order->details as $detail)
+                        @foreach($order->orderDetails as $detail)
                         <tr>
                             <td class="px-4 py-3 whitespace-nowrap">
                                 <p class="font-medium text-gray-900">{{ $detail->name }}</p>
                                 <p class="text-gray-500 text-xs">{{ $detail->product_type }}</p>
+
+                                {{-- START: ADDED DYNAMIC CONTENT --}}
+                                <div class="mt-2 text-xs text-gray-600 space-y-1">
+                                    @if($detail->product_type == ProductTypeEnum::ITEM_RENTAL->value)
+                                        <!-- EQUIPMENT RENTAL DETAILS -->
+                                        <p><strong>Start Date:</strong> {{ \Carbon\Carbon::parse($detail->start_date)->format('M d, Y') }}</p>
+                                        <p><strong>End Date:</strong> {{ \Carbon\Carbon::parse($detail->end_date)->format('M d, Y') }}</p>
+                                        @php
+                                            $startDate = \Carbon\Carbon::parse($detail->start_date);
+                                            $endDate = \Carbon\Carbon::parse($detail->end_date);
+                                            $durationInDays = $startDate->diffInDays($endDate) + 1;
+                                        @endphp
+                                        <p><strong>Duration:</strong> {{ $durationInDays }} day(s)</p>
+                                    
+                                    @elseif($detail->product_type == ProductTypeEnum::KITCHEN_RENTAL->value)
+                                        <!-- KITCHEN RENTAL DETAILS -->
+                                        <p><strong>Booking Date:</strong> {{ \Carbon\Carbon::parse($detail->booked_date)->format('M d, Y') }}</p>
+                                        @if($detail->booked_durations)
+                                            @php
+                                                // Decode the JSON string
+                                                $durationData = json_decode($detail->booked_durations, true);
+                                                // Check if 'time_slot' key exists
+                                                $timeSlot = $durationData['time_slot'] ?? 'N/A';
+                                            @endphp
+                                            <p><strong>Time:</strong> {{ $timeSlot }}</p>
+                                        @endif
+                                    @endif
+                                </div>
+                                {{-- END: ADDED DYNAMIC CONTENT --}}
+
                             </td>
                             <td class="px-4 py-3 whitespace-nowrap">{{ $order->currency }} {{ number_format($detail->price, 2) }}</td>
-                            <td class="px-4 py-3 whitespace-nowrap">{{ $detail->quantity }}</td>
+                            <td class="px-4 py-3 whitespace-nowrap">
+                                {{ $detail->quantity }} 
+                                @if($detail->product_type == ProductTypeEnum::ITEM_RENTAL->value) 
+                                    unit(s)
+                                @elseif($detail->product_type == ProductTypeEnum::KITCHEN_RENTAL->value)
+                                    hour(s)
+                                @endif
+                            </td>
                             <td class="px-4 py-3 whitespace-nowrap text-right">{{ $order->currency }} {{ number_format($detail->sub_total, 2) }}</td>
                         </tr>
                         @endforeach

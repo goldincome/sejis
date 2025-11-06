@@ -14,10 +14,12 @@ class KitchenRentalController extends Controller
 {
     public function index()
     {
-        $catSlug = ProductTypeEnum::KITCHEN_RENTAL->value;
-        $category = Category::with('product')->where('slug', $catSlug)->first();
-        $kitchen = $category->product;
-
+        //$catSlug = ProductTypeEnum::KITCHEN_RENTAL->value;
+        //$kitchen = Product::where('type', $catSlug)->first();
+        $kitchen = Product::where('type', ProductTypeEnum::KITCHEN_RENTAL->value)->first();
+        if($kitchen){
+            $kitchen->load('category', 'media');
+        }
          return view('front.kitchen-rental.index', compact('kitchen'));
     }
 

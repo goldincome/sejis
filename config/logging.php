@@ -126,6 +126,47 @@ return [
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
         ],
+        
+        // Custom application channels
+        'application' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/application.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'days' => env('LOG_DAILY_DAYS', 14),
+            'replace_placeholders' => true,
+        ],
+        
+        'payment' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/payment.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'days' => 30, // Keep payment logs longer
+            'replace_placeholders' => true,
+        ],
+        
+        'user_actions' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/user-actions.log'),
+            'level' => 'info',
+            'days' => env('LOG_DAILY_DAYS', 14),
+            'replace_placeholders' => true,
+        ],
+        
+        'security' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/security.log'),
+            'level' => 'warning',
+            'days' => 90, // Keep security logs longer
+            'replace_placeholders' => true,
+        ],
+        
+        'cart' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/cart.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'days' => env('LOG_DAILY_DAYS', 14),
+            'replace_placeholders' => true,
+        ],
 
     ],
 

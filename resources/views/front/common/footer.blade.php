@@ -11,19 +11,19 @@
                 <div>
                     <h4 class="text-lg font-semibold text-white mb-4">Quick Links</h4>
                     <ul class="space-y-2 text-sm">
-                        <li><a href="about.html" class="hover:text-brand-light-blue transition-colors">About Us</a></li>
-                        <li><a href="kitchen-rental.html" class="hover:text-brand-light-blue transition-colors">Kitchen Rental</a></li>
-                        <li><a href="equipment-rental.html" class="hover:text-brand-light-blue transition-colors">Equipment Rental</a></li>
-                        <li><a href="faq.html" class="hover:text-brand-light-blue transition-colors">FAQ</a></li> 
-                        <li><a href="contact.html" class="hover:text-brand-light-blue transition-colors">Contact Us</a></li>
+                        <li><a href="{{ route('about-us') }}" class="hover:text-brand-light-blue transition-colors">About Us</a></li>
+                        <li><a href="{{ route('kitchen-rentals.index') }}" class="hover:text-brand-light-blue transition-colors">Kitchen Rental</a></li>
+                        <li><a href="{{ route('equipment-rentals.index') }}" class="hover:text-brand-light-blue transition-colors">Equipment Rental</a></li>
+                        <li><a href="#" class="hover:text-brand-light-blue transition-colors">FAQ</a></li> 
+                        <li><a href="{{ route('contact-us') }}" class="hover:text-brand-light-blue transition-colors">Contact Us</a></li>
                     </ul>
                 </div>
                 <div>
                     <h4 class="text-lg font-semibold text-white mb-4">Legal</h4>
                     <ul class="space-y-2 text-sm">
-                        <li><a href="terms.html" class="hover:text-brand-light-blue transition-colors">Terms of Service</a></li>
-                        <li><a href="privacy.html" class="hover:text-brand-light-blue transition-colors">Privacy Policy</a></li>
-                        <li><a href="booking-policy.html" class="hover:text-brand-light-blue transition-colors">Booking Policy</a></li>
+                        <li><a href="{{ route('terms-of-service') }}" class="hover:text-brand-light-blue transition-colors">Terms of Service</a></li>
+                        <li><a href="{{ route('privacy-policy') }}" class="hover:text-brand-light-blue transition-colors">Privacy Policy</a></li>
+                        <li><a href="{{ route('booking-policy') }}" class="hover:text-brand-light-blue transition-colors">Booking Policy</a></li>
                     </ul>
                 </div>
                 <div>

@@ -377,274 +377,276 @@
 
 @section('js')
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        @if($kitchen)
+            document.addEventListener('DOMContentLoaded', function() {
 
-            // Current Year
-            const currentYearEl = document.getElementById('currentYear');
-            if (currentYearEl) currentYearEl.textContent = new Date().getFullYear();
+                // Current Year
+                const currentYearEl = document.getElementById('currentYear');
+                if (currentYearEl) currentYearEl.textContent = new Date().getFullYear();
 
-            // --- MODAL LOGIC ---
-            const modal = document.getElementById('imageModal');
-            const modalImage = document.getElementById('modalImage');
-            const closeModalBtn = document.getElementById('closeModal');
+                // --- MODAL LOGIC ---
+                const modal = document.getElementById('imageModal');
+                const modalImage = document.getElementById('modalImage');
+                const closeModalBtn = document.getElementById('closeModal');
 
-            // This function is now globally accessible to be called from onclick attributes
-            window.openModalWithSrc = function(src) {
-                if (!modal || !modalImage) return;
-                modalImage.src = src;
-                modal.classList.remove('hidden');
-                setTimeout(() => {
-                    modal.classList.remove('opacity-0');
-                    modal.querySelector('div').classList.remove('scale-95');
-                }, 10);
-            }
-
-            function closeModal() {
-                if (!modal) return;
-                modal.classList.add('opacity-0');
-                modal.querySelector('div').classList.add('scale-95');
-                setTimeout(() => modal.classList.add('hidden'), 300);
-            }
-            if (closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
-            if (modal) modal.addEventListener('click', (e) => {
-                if (e.target === modal) closeModal();
-            });
-            document.addEventListener('keydown', e => {
-                if (e.key === 'Escape' && !modal.classList.contains('hidden')) closeModal();
-            });
-
-
-            // --- Main Thumbnail Gallery ---
-            const mainImage = document.getElementById('mainRoomImage');
-            const thumbnailContainer = document.getElementById('thumbnailContainer');
-            const kitchenImageData = [{
-                    main: '{{$kitchen->primary_image->getUrl() }}?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-                    thumb: '{{$kitchen->primary_image->getUrl() }}?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop'
-                },
-                @foreach ($kitchen->other_images as $media)
-                {
-                    main: '{{ $media->getUrl() }}?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-                    thumb: '{{ $media->getUrl() }}?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop'
-                },
-                @endforeach
-               
-            ];
-
-            function populateThumbnails(container, targetMainImage, imageData) {
-                if (!container) return;
-                container.innerHTML = '';
-                imageData.forEach(imgData => {
-                    const thumb = document.createElement('img');
-                    thumb.src = imgData.thumb;
-                    thumb.alt = 'Kitchen Thumbnail';
-                    thumb.className = 'thumbnail';
-                    thumb.dataset.mainSrc = imgData.main;
-                    thumb.onclick = () => {
-                        targetMainImage.src = thumb.dataset.mainSrc;
-                        // Update the onclick for the main image itself
-                        targetMainImage.setAttribute('onclick',
-                            `openModalWithSrc('${thumb.dataset.mainSrc}')`);
-                        container.querySelectorAll('.thumbnail').forEach(t => t.classList.remove(
-                            'active'));
-                        thumb.classList.add('active');
-                    };
-                    container.appendChild(thumb);
-                });
-                if (container.firstChild) container.firstChild.classList.add('active');
-            }
-            if (mainImage) populateThumbnails(thumbnailContainer, mainImage, kitchenImageData);
-
-
-            // --- NEW: Facility Scrolling Gallery Logic ---
-            const facilityGallery = document.getElementById('facility-scrolling-gallery');
-            const facilityImages = [
-                '{{$kitchen->primary_image->getUrl() }}?auto=compress&cs=tinysrgb&w=800',
-                 @foreach ($kitchen->other_images as $media)
-                    '{{ $media->getUrl() }}?auto=compress&cs=tinysrgb&w=800',
-                @endforeach
-                'https://images.pexels.com/photos/8299879/pexels-photo-8299879.jpeg?auto=compress&cs=tinysrgb&w=800',
-                'https://images.pexels.com/photos/887848/pexels-photo-887848.jpeg?auto=compress&cs=tinysrgb&w=800',
-                'https://images.pexels.com/photos/7088481/pexels-photo-7088481.jpeg?auto=compress&cs=tinysrgb&w=800',
-                'https://images.pexels.com/photos/6207368/pexels-photo-6207368.jpeg?auto=compress&cs=tinysrgb&w=800'
-            ];
-
-            function populateFacilityGallery() {
-                if (!facilityGallery) return;
-                const imagesToDisplay = [...facilityImages, ...facilityImages]; // Duplicate for seamless loop
-                facilityGallery.innerHTML = imagesToDisplay.map(src => `
-                    <img src="${src}" alt="Facility Image" class="scrolling-gallery-img w-80 flex-shrink-0 mx-4 rounded-lg shadow-md" onclick="openModalWithSrc('${src}')">
-                `).join('');
-            }
-            populateFacilityGallery();
-
-            // --- Date Picker ---
-            const dateInput = document.getElementById('date');
-            if (dateInput) {
-                dateInput.setAttribute('min', new Date().toISOString().split('T')[0]);
-            }
-
-            // --- Scroll Animation ---
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
-                    }
-                });
-            }, {
-                threshold: 0.1
-            });
-
-            document.querySelectorAll('.section-animate').forEach(section => {
-                observer.observe(section);
-            });
-
-
-                        // --- Booking Form Logic ---
-            const datePicker = document.getElementById('date-picker');
-            // const durationDropdown = document.getElementById('duration-dropdown'); // Duration is now standard select for cart
-            const bookingTimeDisplay = document.getElementById('booking-time-display');
-            const bookingTimeOptionsContainer = document.getElementById('booking-time-options');
-            let bookingTimeCheckboxes = []; // Will be populated dynamically
-            const bookingTimeMessage = document.getElementById('booking-time-message');
-
-
-            if (datePicker) {
-                const today = new Date().toISOString().split('T')[0];
-                datePicker.setAttribute('min', today);
-
-                datePicker.addEventListener('change', function () {
-                    const selectedDate = this.value;
-                    if (selectedDate) {
-                        updateBookingTimeSlots(selectedDate);
-                    } else {
-                        // Clear and hide time slots if date is cleared
-                        bookingTimeOptionsContainer.innerHTML = '<p class="text-gray-500 text-sm px-4 py-2">Please select a date to see available slots.</p>';
-                        updateBookingTimeDisplay(); // Reset display text
-                        bookingTimeOptionsContainer.classList.add('hidden');
-                         if(bookingTimeDisplay) bookingTimeDisplay.querySelector('i').classList.remove('rotate-180');
-
-                    }
-                });
-            }
-
-            function setupBookingTimeCheckboxes() {
-                bookingTimeCheckboxes = bookingTimeOptionsContainer.querySelectorAll('input[type="checkbox"]');
-                bookingTimeCheckboxes.forEach(checkbox => {
-                    checkbox.addEventListener('change', function () {
-                        updateBookingTimeDisplay();
-                        validateBookingTime();
-                    });
-                });
-            }
-
-            if (bookingTimeDisplay && bookingTimeOptionsContainer) {
-                bookingTimeDisplay.addEventListener('click', function () {
-                    // Only toggle if there are actual options or a message indicating to select a date
-                    if (bookingTimeOptionsContainer.children.length > 0) {
-                        bookingTimeOptionsContainer.classList.toggle('hidden');
-                        this.querySelector('i').classList.toggle('rotate-180');
-                    } else {
-                        bookingTimeMessage.textContent = "Please select a date first.";
-                    }
-                });
-
-                document.addEventListener('click', function (event) {
-                    if (bookingTimeDisplay && !bookingTimeDisplay.contains(event.target) && bookingTimeOptionsContainer && !bookingTimeOptionsContainer.contains(event.target)) {
-                        bookingTimeOptionsContainer.classList.add('hidden');
-                         if(bookingTimeDisplay.querySelector('i')) bookingTimeDisplay.querySelector('i').classList.remove('rotate-180');
-                    }
-                });
-            }
-
-            function updateBookingTimeDisplay() {
-                if (!bookingTimeDisplay) return;
-                const selectedLabels = [];
-                bookingTimeCheckboxes.forEach(checkbox => {
-                    if (checkbox.checked) {
-                        // The text content is the checkbox label itself
-                        selectedLabels.push(checkbox.parentElement.textContent.trim());
-                    }
-                });
-
-                const displaySpan = bookingTimeDisplay.querySelector('span');
-                if (selectedLabels.length > 0) {
-                    displaySpan.textContent = selectedLabels.length === 1 ? selectedLabels[0] : selectedLabels.length + ' slots selected';
-                } else {
-                    displaySpan.textContent = 'Select Time Slot(s)';
+                // This function is now globally accessible to be called from onclick attributes
+                window.openModalWithSrc = function(src) {
+                    if (!modal || !modalImage) return;
+                    modalImage.src = src;
+                    modal.classList.remove('hidden');
+                    setTimeout(() => {
+                        modal.classList.remove('opacity-0');
+                        modal.querySelector('div').classList.remove('scale-95');
+                    }, 10);
                 }
-            }
 
-            function validateBookingTime() {
-                if (!bookingTimeMessage) return true;
-                let oneChecked = false;
-                bookingTimeCheckboxes.forEach(cb => {
-                    if (cb.checked) oneChecked = true;
+                function closeModal() {
+                    if (!modal) return;
+                    modal.classList.add('opacity-0');
+                    modal.querySelector('div').classList.add('scale-95');
+                    setTimeout(() => modal.classList.add('hidden'), 300);
+                }
+                if (closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
+                if (modal) modal.addEventListener('click', (e) => {
+                    if (e.target === modal) closeModal();
                 });
-                // This validation is for UI feedback; form submission relies on backend
-                // if (!oneChecked) {
-                // bookingTimeMessage.textContent = "Please select at least one time slot if making a booking.";
-                // } else {
-                // bookingTimeMessage.textContent = "";
-                // }
-                return true;
-            }
-
-            function updateBookingTimeSlots(selectedDate) {
-                if (!bookingTimeOptionsContainer || !selectedDate) return;
-
-                bookingTimeOptionsContainer.innerHTML = '<p class="text-blue-500 text-sm px-4 py-2">Loading slots...</p>'; // Show loading state
-                updateBookingTimeDisplay(); // Reset display text to "Select Time Slot(s)"
-
-                // Ensure the dropdown is potentially visible if user clicks display
-                bookingTimeOptionsContainer.classList.remove('hidden');
-                 if(bookingTimeDisplay) bookingTimeDisplay.querySelector('i').classList.remove('rotate-180');
+                document.addEventListener('keydown', e => {
+                    if (e.key === 'Escape' && !modal.classList.contains('hidden')) closeModal();
+                });
 
 
-                fetch(`/schedule/slots?booking_date=${selectedDate}`)
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok');
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        bookingTimeOptionsContainer.innerHTML = ''; // Clear loading/old slots
-                        if (data.slots && data.slots.length > 0) {
-                            data.slots.forEach(slotText => { // Assuming slotText is "9:00 AM - 10:00 AM"
-                                const label = document.createElement('label');
-                                label.className = 'multiselect-option block px-4 py-2 hover:bg-gray-100 cursor-pointer';
-                                // To get a value like "0900-1000", we need to parse/convert slotText
-                                // For simplicity, if your getTimeSlots can return {value: "0900-1000", label: "9:00 AM - 10:00 AM"}
-                                // it would be easier. Otherwise, we use the display text as value too.
-                                // Or, derive value:
-                                const timeParts = slotText.match(/(\d{1,2}:\d{2}\s*[AP]M)/g);
-                                let valueAttribute = slotText; // Default to full text if parsing fails
-                                if (timeParts && timeParts.length === 2) {
-                                    const startTime = new Date(`1/1/2000 ${timeParts[0]}`);
-                                    const endTime = new Date(`1/1/2000 ${timeParts[1]}`);
-                                    valueAttribute = `${String(startTime.getHours()).padStart(2,'0')}${String(startTime.getMinutes()).padStart(2,'0')}-${String(endTime.getHours()).padStart(2,'0')}${String(endTime.getMinutes()).padStart(2,'0')}`;
-                                }
+                // --- Main Thumbnail Gallery ---
+                const mainImage = document.getElementById('mainRoomImage');
+                const thumbnailContainer = document.getElementById('thumbnailContainer');
+                const kitchenImageData = [{
+                        main: '{{$kitchen->primary_image->getUrl() }}?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+                        thumb: '{{$kitchen->primary_image->getUrl() }}?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop'
+                    },
+                    @foreach ($kitchen->other_images as $media)
+                    {
+                        main: '{{ $media->getUrl() }}?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+                        thumb: '{{ $media->getUrl() }}?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop'
+                    },
+                    @endforeach
+                
+                ];
 
-                                label.innerHTML = `<input type="checkbox" name="booking_time[]" value="${valueAttribute}" class="mr-2"> ${slotText}`;
-                                bookingTimeOptionsContainer.appendChild(label);
-                            });
-                            setupBookingTimeCheckboxes(); // Re-setup listeners for new checkboxes
-                        } else {
-                            bookingTimeOptionsContainer.innerHTML = '<p class="text-red-500 text-sm px-4 py-2">No available slots for this date.</br>Select another date</p>';
-                        }
-                        updateBookingTimeDisplay(); // Update display based on new (empty) selection
-                    })
-                    .catch(error => {
-                        console.error('Error fetching time slots:', error);
-                        bookingTimeOptionsContainer.innerHTML = '<p class="text-red-500 text-sm px-4 py-2">Error loading slots. Please try again.</p>';
-                        updateBookingTimeDisplay();
+                function populateThumbnails(container, targetMainImage, imageData) {
+                    if (!container) return;
+                    container.innerHTML = '';
+                    imageData.forEach(imgData => {
+                        const thumb = document.createElement('img');
+                        thumb.src = imgData.thumb;
+                        thumb.alt = 'Kitchen Thumbnail';
+                        thumb.className = 'thumbnail';
+                        thumb.dataset.mainSrc = imgData.main;
+                        thumb.onclick = () => {
+                            targetMainImage.src = thumb.dataset.mainSrc;
+                            // Update the onclick for the main image itself
+                            targetMainImage.setAttribute('onclick',
+                                `openModalWithSrc('${thumb.dataset.mainSrc}')`);
+                            container.querySelectorAll('.thumbnail').forEach(t => t.classList.remove(
+                                'active'));
+                            thumb.classList.add('active');
+                        };
+                        container.appendChild(thumb);
                     });
-            }
+                    if (container.firstChild) container.firstChild.classList.add('active');
+                }
+                if (mainImage) populateThumbnails(thumbnailContainer, mainImage, kitchenImageData);
 
-            // Initial call to set up display text
-            if (bookingTimeDisplay) {
-                 updateBookingTimeDisplay();
-            }
-        });
+
+                // --- NEW: Facility Scrolling Gallery Logic ---
+                const facilityGallery = document.getElementById('facility-scrolling-gallery');
+                const facilityImages = [
+                    '{{$kitchen->primary_image->getUrl() }}?auto=compress&cs=tinysrgb&w=800',
+                    @foreach ($kitchen->other_images as $media)
+                        '{{ $media->getUrl() }}?auto=compress&cs=tinysrgb&w=800',
+                    @endforeach
+                    'https://images.pexels.com/photos/8299879/pexels-photo-8299879.jpeg?auto=compress&cs=tinysrgb&w=800',
+                    'https://images.pexels.com/photos/887848/pexels-photo-887848.jpeg?auto=compress&cs=tinysrgb&w=800',
+                    'https://images.pexels.com/photos/7088481/pexels-photo-7088481.jpeg?auto=compress&cs=tinysrgb&w=800',
+                    'https://images.pexels.com/photos/6207368/pexels-photo-6207368.jpeg?auto=compress&cs=tinysrgb&w=800'
+                ];
+
+                function populateFacilityGallery() {
+                    if (!facilityGallery) return;
+                    const imagesToDisplay = [...facilityImages, ...facilityImages]; // Duplicate for seamless loop
+                    facilityGallery.innerHTML = imagesToDisplay.map(src => `
+                        <img src="${src}" alt="Facility Image" class="scrolling-gallery-img w-80 flex-shrink-0 mx-4 rounded-lg shadow-md" onclick="openModalWithSrc('${src}')">
+                    `).join('');
+                }
+                populateFacilityGallery();
+
+                // --- Date Picker ---
+                const dateInput = document.getElementById('date');
+                if (dateInput) {
+                    dateInput.setAttribute('min', new Date().toISOString().split('T')[0]);
+                }
+
+                // --- Scroll Animation ---
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                        }
+                    });
+                }, {
+                    threshold: 0.1
+                });
+
+                document.querySelectorAll('.section-animate').forEach(section => {
+                    observer.observe(section);
+                });
+
+
+                            // --- Booking Form Logic ---
+                const datePicker = document.getElementById('date-picker');
+                // const durationDropdown = document.getElementById('duration-dropdown'); // Duration is now standard select for cart
+                const bookingTimeDisplay = document.getElementById('booking-time-display');
+                const bookingTimeOptionsContainer = document.getElementById('booking-time-options');
+                let bookingTimeCheckboxes = []; // Will be populated dynamically
+                const bookingTimeMessage = document.getElementById('booking-time-message');
+
+
+                if (datePicker) {
+                    const today = new Date().toISOString().split('T')[0];
+                    datePicker.setAttribute('min', today);
+
+                    datePicker.addEventListener('change', function () {
+                        const selectedDate = this.value;
+                        if (selectedDate) {
+                            updateBookingTimeSlots(selectedDate);
+                        } else {
+                            // Clear and hide time slots if date is cleared
+                            bookingTimeOptionsContainer.innerHTML = '<p class="text-gray-500 text-sm px-4 py-2">Please select a date to see available slots.</p>';
+                            updateBookingTimeDisplay(); // Reset display text
+                            bookingTimeOptionsContainer.classList.add('hidden');
+                            if(bookingTimeDisplay) bookingTimeDisplay.querySelector('i').classList.remove('rotate-180');
+
+                        }
+                    });
+                }
+
+                function setupBookingTimeCheckboxes() {
+                    bookingTimeCheckboxes = bookingTimeOptionsContainer.querySelectorAll('input[type="checkbox"]');
+                    bookingTimeCheckboxes.forEach(checkbox => {
+                        checkbox.addEventListener('change', function () {
+                            updateBookingTimeDisplay();
+                            validateBookingTime();
+                        });
+                    });
+                }
+
+                if (bookingTimeDisplay && bookingTimeOptionsContainer) {
+                    bookingTimeDisplay.addEventListener('click', function () {
+                        // Only toggle if there are actual options or a message indicating to select a date
+                        if (bookingTimeOptionsContainer.children.length > 0) {
+                            bookingTimeOptionsContainer.classList.toggle('hidden');
+                            this.querySelector('i').classList.toggle('rotate-180');
+                        } else {
+                            bookingTimeMessage.textContent = "Please select a date first.";
+                        }
+                    });
+
+                    document.addEventListener('click', function (event) {
+                        if (bookingTimeDisplay && !bookingTimeDisplay.contains(event.target) && bookingTimeOptionsContainer && !bookingTimeOptionsContainer.contains(event.target)) {
+                            bookingTimeOptionsContainer.classList.add('hidden');
+                            if(bookingTimeDisplay.querySelector('i')) bookingTimeDisplay.querySelector('i').classList.remove('rotate-180');
+                        }
+                    });
+                }
+
+                function updateBookingTimeDisplay() {
+                    if (!bookingTimeDisplay) return;
+                    const selectedLabels = [];
+                    bookingTimeCheckboxes.forEach(checkbox => {
+                        if (checkbox.checked) {
+                            // The text content is the checkbox label itself
+                            selectedLabels.push(checkbox.parentElement.textContent.trim());
+                        }
+                    });
+
+                    const displaySpan = bookingTimeDisplay.querySelector('span');
+                    if (selectedLabels.length > 0) {
+                        displaySpan.textContent = selectedLabels.length === 1 ? selectedLabels[0] : selectedLabels.length + ' slots selected';
+                    } else {
+                        displaySpan.textContent = 'Select Time Slot(s)';
+                    }
+                }
+
+                function validateBookingTime() {
+                    if (!bookingTimeMessage) return true;
+                    let oneChecked = false;
+                    bookingTimeCheckboxes.forEach(cb => {
+                        if (cb.checked) oneChecked = true;
+                    });
+                    // This validation is for UI feedback; form submission relies on backend
+                    // if (!oneChecked) {
+                    // bookingTimeMessage.textContent = "Please select at least one time slot if making a booking.";
+                    // } else {
+                    // bookingTimeMessage.textContent = "";
+                    // }
+                    return true;
+                }
+
+                function updateBookingTimeSlots(selectedDate) {
+                    if (!bookingTimeOptionsContainer || !selectedDate) return;
+
+                    bookingTimeOptionsContainer.innerHTML = '<p class="text-blue-500 text-sm px-4 py-2">Loading slots...</p>'; // Show loading state
+                    updateBookingTimeDisplay(); // Reset display text to "Select Time Slot(s)"
+
+                    // Ensure the dropdown is potentially visible if user clicks display
+                    bookingTimeOptionsContainer.classList.remove('hidden');
+                    if(bookingTimeDisplay) bookingTimeDisplay.querySelector('i').classList.remove('rotate-180');
+
+
+                    fetch(`/schedule/slots?booking_date=${selectedDate}`)
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            bookingTimeOptionsContainer.innerHTML = ''; // Clear loading/old slots
+                            if (data.slots && data.slots.length > 0) {
+                                data.slots.forEach(slotText => { // Assuming slotText is "9:00 AM - 10:00 AM"
+                                    const label = document.createElement('label');
+                                    label.className = 'multiselect-option block px-4 py-2 hover:bg-gray-100 cursor-pointer';
+                                    // To get a value like "0900-1000", we need to parse/convert slotText
+                                    // For simplicity, if your getTimeSlots can return {value: "0900-1000", label: "9:00 AM - 10:00 AM"}
+                                    // it would be easier. Otherwise, we use the display text as value too.
+                                    // Or, derive value:
+                                    const timeParts = slotText.match(/(\d{1,2}:\d{2}\s*[AP]M)/g);
+                                    let valueAttribute = slotText; // Default to full text if parsing fails
+                                    if (timeParts && timeParts.length === 2) {
+                                        const startTime = new Date(`1/1/2000 ${timeParts[0]}`);
+                                        const endTime = new Date(`1/1/2000 ${timeParts[1]}`);
+                                        valueAttribute = `${String(startTime.getHours()).padStart(2,'0')}${String(startTime.getMinutes()).padStart(2,'0')}-${String(endTime.getHours()).padStart(2,'0')}${String(endTime.getMinutes()).padStart(2,'0')}`;
+                                    }
+
+                                    label.innerHTML = `<input type="checkbox" name="booking_time[]" value="${valueAttribute}" class="mr-2"> ${slotText}`;
+                                    bookingTimeOptionsContainer.appendChild(label);
+                                });
+                                setupBookingTimeCheckboxes(); // Re-setup listeners for new checkboxes
+                            } else {
+                                bookingTimeOptionsContainer.innerHTML = '<p class="text-red-500 text-sm px-4 py-2">No available slots for this date.</br>Select another date</p>';
+                            }
+                            updateBookingTimeDisplay(); // Update display based on new (empty) selection
+                        })
+                        .catch(error => {
+                            console.error('Error fetching time slots:', error);
+                            bookingTimeOptionsContainer.innerHTML = '<p class="text-red-500 text-sm px-4 py-2">Error loading slots. Please try again.</p>';
+                            updateBookingTimeDisplay();
+                        });
+                }
+
+                // Initial call to set up display text
+                if (bookingTimeDisplay) {
+                    updateBookingTimeDisplay();
+                }
+            });
+        @endif
     </script>
 @endsection

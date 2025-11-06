@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@php
+    use App\Enums\ProductTypeEnum; // Import the Enum to use in the view
+@endphp
+
 @section('title', 'Your Cart - Sejis Rentals')
 @section('css')
     <style>
@@ -70,10 +74,10 @@
                                             Details</th>
                                         <th scope="col"
                                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Price</th>
+                                            Unit Price</th>
                                         <th scope="col"
                                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Hour(s)</th>
+                                            Quantity</th>
                                         <th scope="col"
                                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Subtotal</th>
@@ -88,24 +92,50 @@
                                                     <div class="flex-shrink-0 h-16 w-16">
                                                         <img class="h-16 w-16 rounded-md object-cover"
                                                             src="{{ $item->options->image ?: 'https://images.pexels.com/photos/3771120/pexels-photo-3771120.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop' }}"
-                                                            alt="ProChef Station">
+                                                            alt="{{ $item->name }}">
                                                     </div>
                                                     <div class="ml-4">
                                                         <div class="text-sm font-medium text-gray-900">{{ $item->name }}</div>
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                Date: {{ \Carbon\Carbon::parse($item->options->booking_date)->format('D, M j, Y') }}
-                                                <br> @foreach($item->options->booking_time_display as  $timeDisplay)
-                                                                @php $duration = 1; @endphp
-                                                                <p class="text-sm text-gray-500 mt-1"><span class="text-blue-800">Time:</span> {{ $timeDisplay }} ({{ $duration }} hour{{ $item->qty > 1 ? 's' : '' }})</p>
-                                                                @php $duration = 0; @endphp
-                                                            @endforeach
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ currencyFormatter($item->price) }} / hour</td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $item->qty }}</td>
+
+                                            {{-- Use @if to check the product_type and display correct details --}}
+                                            @if($item->options->product_type == ProductTypeEnum::KITCHEN_RENTAL->value)
+                                                <!-- KITCHEN RENTAL DETAILS -->
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                    Date: {{ \Carbon\Carbon::parse($item->options->booking_date)->format('D, M j, Y') }}
+                                                    <br>
+                                                    @foreach($item->options->booking_time_display as $timeDisplay)
+                                                        <p class="text-sm text-gray-500 mt-1"><span class="text-blue-800">Time:</span> {{ $timeDisplay }}</p>
+                                                    @endforeach
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ currencyFormatter($item->price) }} / hour</td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $item->qty }} hour(s)</td>
+
+                                            @elseif($item->options->product_type == ProductTypeEnum::ITEM_RENTAL->value)
+                                                <!-- EQUIPMENT RENTAL DETAILS -->
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                    Start: {{ \Carbon\Carbon::parse($item->options->start_date)->format('D, M j, Y') }}
+                                                    <br>
+                                                    End: {{ \Carbon\Carbon::parse($item->options->end_date)->format('D, M j, Y') }}
+                                                    <br>
+                                                    <span class="text-blue-800">Duration:</span> {{ $item->options->rental_duration }} day(s)
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                    {{ currencyFormatter($item->price) }} 
+                                                    <span class="text-xs text-gray-500">/ item for duration</span>
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $item->qty }} unit(s)</td>
+                                            
+                                            @else
+                                                <!-- Fallback for items without a type -->
+                                                <td class="px-6 py-4 text-sm text-gray-500" colspan="3">Item details not available.</td>
+                                            @endif
+
+                                            {{-- This subtotal works for both types --}}
                                             <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">{{ currencyFormatter($item->subtotal(2, '.', '')) }}</td>
+                                            
                                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                                 <form action="{{ route('cart.remove') }}" method="POST">
                                                     @csrf

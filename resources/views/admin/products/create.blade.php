@@ -30,7 +30,7 @@
                             <select name="category_id" id="category" required
                                 class="w-full px-3 py-2 border border-gray-300 rounded-lg @error('category_id') border-red-500 @enderror"
                                 autocomplete="off">
-                                <option value="">Select Icon</option>
+                                <option value="">Select Product Type</option>
                                 @foreach ($categories as $category)
                                     <option value="{{ $category->id }}"
                                         {{ old('category_id') == $category->id ? 'selected' : '' }}>

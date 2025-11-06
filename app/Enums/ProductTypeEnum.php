@@ -3,8 +3,8 @@ namespace App\Enums;
 
 enum ProductTypeEnum: string
 {
-    case KITCHEN_RENTAL = 'kitchen-rental';
-    case ITEM_RENTAL = 'item-rental';
+    case KITCHEN_RENTAL = 'kitchen-rentals';
+    case ITEM_RENTAL = 'item-rentals';
 
 
     public static function available(): array
@@ -18,8 +18,8 @@ enum ProductTypeEnum: string
     public function label(): string
     {
         return match ($this) {
-            self::KITCHEN_RENTAL => 'Kitchen Rental',
-            self::ITEM_RENTAL => 'Item Rental',
+            self::KITCHEN_RENTAL => 'Kitchen Rentals',
+            self::ITEM_RENTAL => 'Equipment Rentals',
         };
       
     }

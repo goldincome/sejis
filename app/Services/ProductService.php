@@ -82,7 +82,7 @@ class ProductService
         }catch (Exception $e) {
             DB::rollBack();
             throw new Exception('Failed to delete rental item: ' . $e->getMessage());
-            return false;
+            //return false;
         } 
         
     }

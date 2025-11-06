@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@php
+    use App\Enums\ProductTypeEnum; // Import the Enum to use in the view
+@endphp
+
 @section('title', 'Checkout - Sejis Rentals')
 
 @section('description', 'Checkout - Sejis Rentals')
@@ -22,26 +26,45 @@
                                 class="w-full h-full object-cover">
                         </div>
 
-                        {{-- Product Name and Quantity --}}
+                        {{-- Product Name and Details --}}
                         <div class="flex-1 px-4">
                             <h4 class="font-semibold text-blue-800 ">{{ $item->name }}</h4>
-                            <div class="text-sm text-gray-600">
-                                Date: {{ \Carbon\Carbon::parse($item->options->booking_date)->format('D, M j, Y') }}
-                                @foreach ($item->options->booking_time_display as $timeDisplay)
-                                    @php $duration = 1; @endphp
-                                    <p class="text-sm text-gray-500"><span class="text-blue-800">Time:</span>
-                                        {{ $timeDisplay }} ({{ $duration }} hour{{ $item->qty > 1 ? 's' : '' }})
-                                    </p>
-                                    @php $duration = 0; @endphp
-                                @endforeach
-                            </div>
-
+                            
+                            {{-- Check Product Type --}}
+                            @if($item->options->product_type == ProductTypeEnum::KITCHEN_RENTAL->value)
+                                <!-- KITCHEN RENTAL DETAILS -->
+                                <div class="text-sm text-gray-600">
+                                    Date: {{ \Carbon\Carbon::parse($item->options->booking_date)->format('D, M j, Y') }}
+                                    @foreach ($item->options->booking_time_display as $timeDisplay)
+                                        <p class="text-sm text-gray-500"><span class="text-blue-800">Time:</span>
+                                            {{ $timeDisplay }} (1 hour)
+                                        </p>
+                                    @endforeach
+                                </div>
+                            @elseif($item->options->product_type == ProductTypeEnum::ITEM_RENTAL->value)
+                                <!-- EQUIPMENT RENTAL DETAILS -->
+                                <div class="text-sm text-gray-600">
+                                    Start: {{ \Carbon\Carbon::parse($item->options->start_date)->format('D, M j, Y') }}
+                                    <br>
+                                    End: {{ \Carbon\Carbon::parse($item->options->end_date)->format('D, M j, Y') }}
+                                    <br>
+                                    <span class="text-blue-800">Duration:</span> {{ $item->options->rental_duration }} day(s)
+                                </div>
+                            @endif
                         </div>
 
-                        {{-- Unit Price --}}
+                        {{-- Unit Price / Quantity --}}
                         <div class="w-24 text-right">
-                            <div class="text-blue-800 font-medium">{{ $item->qty }} X
-                                {{ currencyFormatter($item->price) }}</div>
+                            @if($item->options->product_type == ProductTypeEnum::KITCHEN_RENTAL->value)
+                                <div class="text-blue-800 font-medium">{{ $item->qty }} hour(s) X
+                                    {{ currencyFormatter($item->price) }}</div>
+                            @elseif($item->options->product_type == ProductTypeEnum::ITEM_RENTAL->value)
+                                <div class="text-blue-800 font-medium">{{ $item->qty }} unit(s) X
+                                    {{ currencyFormatter($item->price) }}</div>
+                            @else
+                                <div class="text-blue-800 font-medium">{{ $item->qty }} X
+                                    {{ currencyFormatter($item->price) }}</div>
+                            @endif
                         </div>
 
                         {{-- Subtotal --}}
@@ -50,6 +73,7 @@
                         </div>
                     </div>
                 @endforeach
+                
                 <div class="border-t pt-4 mt-4">
                     <div class="flex justify-between items-center text-blue-800 text-lg">
                         <span>Subtotal</span> <span>{{ currencyFormatter(Cart::subtotal(2, '.', '')) }}</span>

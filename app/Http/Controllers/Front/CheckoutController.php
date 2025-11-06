@@ -23,10 +23,11 @@ class CheckoutController extends Controller
     }
 
     public function index()
-    { 
+    {  
         if($this->cartService::content()->count() == 0){
             return to_route('cart.index');
         }
+        
         try {
            $cartItems = $this->cartService::content();
            $productType =  ProductTypeEnum::class;
@@ -46,7 +47,7 @@ class CheckoutController extends Controller
      * Process the payment based on the selected gateway.
      *
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * 
      */
     public function store(Request $request)
     {  

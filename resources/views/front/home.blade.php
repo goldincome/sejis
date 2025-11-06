@@ -14,7 +14,7 @@
         <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 font-pacifico animate-fade-in-down">Rent Your Perfect Kitchen & Equipment Today</h1>
             <p class="text-lg sm:text-xl md:text-2xl mb-10 max-w-3xl mx-auto text-brand-light-blue animate-fade-in-up">Access fully-equipped commercial kitchens and premium equipment rentals. Perfect for chefs, caterers, and food entrepreneurs ready to create, innovate, and grow.</p>
-            <a href="booking.html" class="bg-accent text-white font-bold py-3 px-8 sm:py-4 sm:px-10 rounded-lg text-lg sm:text-xl hover:bg-accent-darker transition duration-300 transform hover:scale-105 animate-bounce-custom">Get Started Today</a>
+            <a href="{{ route('kitchen-rentals.index') }}" class="bg-accent text-white font-bold py-3 px-8 sm:py-4 sm:px-10 rounded-lg text-lg sm:text-xl hover:bg-accent-darker transition duration-300 transform hover:scale-105 animate-bounce-custom">Get Started Today</a>
         </div>
     </section>
 
@@ -28,7 +28,7 @@
                     <div class="p-6 lg:p-8 flex flex-col flex-grow">
                         <h3 class="text-2xl lg:text-3xl font-semibold text-brand-deep-ash mb-3"><i class="fas fa-kitchen-set mr-2 text-accent"></i>Commercial Kitchen Rental</h3>
                         <p class="text-gray-700 mb-6 flex-grow">State-of-the-art, health-certified kitchen spaces available by the hour, day, or month. Ideal for food startups, pop-ups, catering, and product development. Equipped for efficiency and creativity.</p>
-                        <a href="kitchen-rental.html" class="mt-auto inline-block bg-brand-deep-ash text-white font-semibold py-3 px-6 rounded-lg hover:bg-brand-deep-ash-lighter transition duration-300 text-center">Book Now! <i class="fas fa-arrow-right ml-2"></i></a>
+                        <a href="{{ route('kitchen-rentals.index') }}" class="mt-auto inline-block bg-brand-deep-ash text-white font-semibold py-3 px-6 rounded-lg hover:bg-brand-deep-ash-lighter transition duration-300 text-center">Book Now! <i class="fas fa-arrow-right ml-2"></i></a>
                     </div>
                 </div>
                 <div class="bg-gray-50 rounded-xl shadow-xl overflow-hidden transform hover:shadow-2xl transition-shadow duration-300 flex flex-col">
@@ -36,7 +36,7 @@
                     <div class="p-6 lg:p-8 flex flex-col flex-grow">
                         <h3 class="text-2xl lg:text-3xl font-semibold text-brand-deep-ash mb-3"><i class="fas fa-utensils mr-2 text-accent"></i>Pot, Plate & Cutlery Rental</h3>
                         <p class="text-gray-700 mb-6 flex-grow">Rent high-quality cookware, elegant tableware, and professional cutlery for your events, catering services, or temporary kitchen needs. Flexible packages available.</p>
-                        <a href="equipment-rental.html" class="mt-auto inline-block bg-brand-deep-ash text-white font-semibold py-3 px-6 rounded-lg hover:bg-brand-deep-ash-lighter transition duration-300 text-center">Browse Equipment <i class="fas fa-arrow-right ml-2"></i></a>
+                        <a href="{{ route('equipment-rentals.index') }}" class="mt-auto inline-block bg-brand-deep-ash text-white font-semibold py-3 px-6 rounded-lg hover:bg-brand-deep-ash-lighter transition duration-300 text-center">Browse Equipment <i class="fas fa-arrow-right ml-2"></i></a>
                     </div>
                 </div>
             </div>
@@ -79,7 +79,7 @@
                 </div>
             </div>
             <div class="text-center mt-12 sm:mt-16">
-                <a href="about.html" class="bg-brand-deep-ash text-white font-semibold py-3 px-8 rounded-lg hover:bg-brand-deep-ash-lighter transition duration-300 text-lg">Learn More About Us</a>
+                <a href="{{ route('about-us') }}" class="bg-brand-deep-ash text-white font-semibold py-3 px-8 rounded-lg hover:bg-brand-deep-ash-lighter transition duration-300 text-lg">Learn More About Us</a>
             </div>
         </div>
     </section>
@@ -116,7 +116,7 @@
                     <div class="p-6 bg-white">
                         <h3 class="text-xl font-semibold text-dark-charcoal mb-2">The Culinary Hub - Central City</h3>
                         <p class="text-sm text-gray-custom mb-3">Perfect for large-scale production or team cooking events. Fully HACCP compliant.</p>
-                        <a href="#" class="text-primary-orange font-semibold hover:underline">View Details & Availability <i class="fas fa-arrow-right text-xs ml-1"></i></a>
+                        <a href="{{ route('kitchen-rentals.index') }}" class="text-primary-orange font-semibold hover:underline">View Details & Availability <i class="fas fa-arrow-right text-xs ml-1"></i></a>
                     </div>
                 </div>
                 <div class="rounded-lg shadow-xl overflow-hidden group">
@@ -124,7 +124,7 @@
                     <div class="p-6 bg-white">
                         <h3 class="text-xl font-semibold text-dark-charcoal mb-2">Heavy-Duty Stand Mixer (20 Qt)</h3>
                         <p class="text-sm text-gray-custom mb-3">Ideal for bakeries and high-volume mixing tasks. Multiple attachments available.</p>
-                        <a href="#" class="text-primary-orange font-semibold hover:underline">Rent This Equipment <i class="fas fa-arrow-right text-xs ml-1"></i></a>
+                        <a href="{{ route('equipment-rentals.index') }}" class="text-primary-orange font-semibold hover:underline">Rent This Equipment <i class="fas fa-arrow-right text-xs ml-1"></i></a>
                     </div>
                 </div>
                 <div class="rounded-lg shadow-xl overflow-hidden group">
@@ -132,7 +132,7 @@
                     <div class="p-6 bg-white">
                         <h3 class="text-xl font-semibold text-dark-charcoal mb-2">Pot, Plate & Cutlery</h3>
                         <p class="text-sm text-gray-custom mb-3">Rent high-quality cookware, elegant tableware, and professional cutlery for your events.</p>
-                        <a href="#" class="text-primary-orange font-semibold hover:underline">Check Availability <i class="fas fa-arrow-right text-xs ml-1"></i></a>
+                        <a href="{{ route('equipment-rentals.index') }}" class="text-primary-orange font-semibold hover:underline">Check Availability <i class="fas fa-arrow-right text-xs ml-1"></i></a>
                     </div>
                 </div>
             </div>
@@ -213,8 +213,8 @@
         <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h2 class="text-3xl sm:text-4xl font-bold mb-6 font-pacifico">Ready to Elevate Your Culinary Business?</h2>
             <p class="text-lg sm:text-xl mb-10 max-w-2xl mx-auto text-brand-light-blue">Don't let lack of space or equipment hold you back. Join the ProKitchen community and access the resources you need to succeed.</p>
-            <a href="booking.html" class="bg-accent text-brand-deep-ash font-bold py-3 px-8 sm:py-4 sm:px-10 rounded-lg text-lg sm:text-xl hover:bg-accent-darker transition duration-300 transform hover:scale-105">Book Your Kitchen Now</a>
-            <a href="contact.html" class="ml-4 border-2 border-accent text-accent font-bold py-3 px-8 sm:py-4 sm:px-10 rounded-lg text-lg sm:text-xl hover:bg-accent hover:text-brand-deep-ash transition duration-300 transform hover:scale-105">Ask a Question</a>
+            <a href="{{ route('kitchen-rentals.index') }}" class="bg-accent text-brand-deep-ash font-bold py-3 px-8 sm:py-4 sm:px-10 rounded-lg text-lg sm:text-xl hover:bg-accent-darker transition duration-300 transform hover:scale-105">Book Your Kitchen Now</a>
+            <a href="{{ route('contact-us') }}" class="ml-4 border-2 border-accent text-accent font-bold py-3 px-8 sm:py-4 sm:px-10 rounded-lg text-lg sm:text-xl hover:bg-accent hover:text-brand-deep-ash transition duration-300 transform hover:scale-105">Ask a Question</a>
         </div>
     </section>
 @endsection

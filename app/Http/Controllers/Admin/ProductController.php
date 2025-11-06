@@ -64,6 +64,11 @@ class ProductController extends Controller
                 $productData['additional_images'] =  $request->file('additional_images') ?? null;
             }
 
+            $cat = Category::find($request->category_id);
+            if($cat){
+                $productData['type'] = $cat->slug;
+            }
+
             $product = $this->productService->createProduct(
                 array_merge($validated, $productData)
             );
@@ -115,6 +120,11 @@ class ProductController extends Controller
             if ($request->input('existing_additional_images')) {
                 $productData['existing_additional_images'] = $request->input('existing_additional_images');
             }
+            $cat = Category::find($request->category_id);
+            if($cat){
+                $productData['type'] = $cat->slug;
+            }
+
             // Update product, 
             $this->productService->updateProduct($product, $productData);
         } catch (Exception $e) {

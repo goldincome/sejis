@@ -17,7 +17,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                     <label for="name" class="block text-sm font-medium text-gray-700">Category Name *</label>
-                    <input type="text" name="name" id="name" required
+                    <input type="text" name="name" id="name" required value="{{ old('name') }}"
                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                     @error('name')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -25,15 +25,15 @@
                 </div>
                 
                 <div>
-                    <label for="parent_id" class="block text-sm font-medium text-gray-700">Parent Category</label>
-                    <select name="parent_id" id="parent_id" 
+                    <label for="parent_id" class="block text-sm font-medium text-gray-700">Product Type </label>
+                    <select name="product_type" id="product_type" 
                             class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                        <option value="">None (Top-level Category)</option>
-                        @foreach($parentCategories as $parent)
-                            <option value="{{ $parent->id }}">{{ $parent->name }}</option>
+                        <option value="">-- Select Product Type --</option>
+                        @foreach($productTypes::cases() as $productType)
+                            <option value="{{ $productType->value }}">{{ $productType->label() }}</option>
                         @endforeach
                     </select>
-                    @error('parent_id')
+                    @error('product_type')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
@@ -41,7 +41,7 @@
                 <div class="md:col-span-2">
                     <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
                     <textarea name="description" id="description" rows="3"
-                              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"></textarea>
+                              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">{{ old('description') }}</textarea>
                     @error('description')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror

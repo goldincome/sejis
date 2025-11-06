@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\ProductTypeEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
@@ -25,8 +26,8 @@ class CategoryController extends Controller
 
     public function create()
     {
-        $parentCategories = $this->categoryService->getParentCategories();
-        return view('admin.categories.create', compact('parentCategories'));
+        $productTypes = ProductTypeEnum::class;
+        return view('admin.categories.create', compact('productTypes'));
     }
 
     public function store(CategoryRequest $request)
@@ -44,7 +45,8 @@ class CategoryController extends Controller
     public function edit(Category $category)
     {
         $parentCategories = $this->categoryService->getParentCategories();
-        return view('admin.categories.edit', compact('category', 'parentCategories'));
+        $productTypes = ProductTypeEnum::class;
+        return view('admin.categories.edit', compact('category', 'productTypes'));
     }
 
     public function update(CategoryRequest $request, Category $category)

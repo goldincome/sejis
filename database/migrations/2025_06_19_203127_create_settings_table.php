@@ -13,10 +13,17 @@ return new class extends Migration
     {
         Schema::create('settings', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('slug');
-            $table->json('values')->nullable();
+            $table->string('key')->unique();
+            $table->longText('value')->nullable();
+            $table->string('type')->default('string'); // string, boolean, integer, json, file
+            $table->string('group')->default('general'); // general, payment, email, site
+            $table->boolean('is_public')->default(false); // Can be accessed in frontend
+            $table->boolean('is_encrypted')->default(false); // For sensitive data
+            $table->text('description')->nullable();
             $table->timestamps();
+            
+            $table->index(['group', 'key']);
+            $table->index('is_public');
         });
     }
 

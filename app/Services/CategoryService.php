@@ -30,7 +30,7 @@ class CategoryService
             $category = Category::create([
                 'name' => $data['name'],
                 'description' => $data['description'] ?? null,
-                'parent_id' => $data['parent_id'] ?? null,
+                'product_type' => $data['product_type'] ,
             ]);
 
             if (isset($data['image'])) {
@@ -48,7 +48,7 @@ class CategoryService
             $category->update([
                 'name' => $data['name'],
                 'description' => $data['description'] ?? null,
-                'parent_id' => $data['parent_id'] ?? null,
+                'product_type' => $data['product_type'] ?? null,
             ]);
 
             if (isset($data['image'])) {

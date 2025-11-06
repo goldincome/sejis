@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Support\Str;
 use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,12 +13,12 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Category extends Model implements HasMedia
 {
-    use InteractsWithMedia;
+    use HasFactory, InteractsWithMedia;
 
     protected $fillable = [
         'name',
         'description',
-        'parent_id'
+        'product_type'
     ];
 
     protected static function boot()
@@ -25,7 +26,7 @@ class Category extends Model implements HasMedia
          parent::boot();
          static::creating(function ($category) {
             if (empty($category->slug)) {
-                $category->slug = Str::slug($category->name);
+                $category->slug =  $category->product_type;
              }
          });
     }

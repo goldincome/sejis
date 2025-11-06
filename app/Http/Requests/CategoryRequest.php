@@ -24,7 +24,7 @@ class CategoryRequest extends FormRequest
                 Rule::unique('categories')->ignore($categoryId)
             ],
             'description' => 'nullable|string',
-            'parent_id' => 'nullable|exists:categories,id',
+            'product_type' => 'required|string',
             'image' => 'nullable|image|max:2048'
         ];
     }
@@ -34,7 +34,7 @@ class CategoryRequest extends FormRequest
         return [
             'name.required' => 'Category name is required',
             'name.unique' => 'This category name already exists',
-            'parent_id.exists' => 'Selected parent category is invalid',
+            'product_type.required' => 'Selected Product Type is required',
             'image.image' => 'Uploaded file must be an image',
             'image.max' => 'Image size cannot exceed 2MB'
         ];

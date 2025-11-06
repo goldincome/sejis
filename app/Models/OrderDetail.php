@@ -18,6 +18,8 @@ class OrderDetail extends Model
         'product_type',
         'sub_total',
         'booked_date',
+        'start_date',
+        'end_date',
         'booked_durations',
         'ref_no'
     ];
