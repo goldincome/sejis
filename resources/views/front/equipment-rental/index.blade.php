@@ -160,51 +160,6 @@
                             </div>
                         @endforeach
 
-                        <!-- Equipment Card 2: Convection Oven -->
-                        <div
-                            class="equipment-card bg-white rounded-lg shadow-lg overflow-hidden flex flex-col transform hover:scale-[1.02] transition-transform duration-300 section-animate" style="animation-delay: 0.1s;">
-                            <img src="https://images.pexels.com/photos/6207291/pexels-photo-6207291.jpeg?auto=compress&cs=tinysrgb&w=600"
-                                alt="Convection Oven" class="w-full equipment-card-image">
-                            <div class="p-6 flex flex-col flex-grow">
-                                <h3 class="text-2xl font-bold text-brand-deep-ash mb-2">Double-Stack Convection Oven</h3>
-                                <p class="text-gray-600 mb-4 flex-grow">High-capacity electric convection oven for even baking
-                                    and roasting. Perfect for bakeries and high-volume kitchens.</p>
-                                <p class="text-3xl font-bold text-brand-deep-ash mb-4">$120<span
-                                        class="text-lg font-normal text-gray-500"> / day</span></p>
-                                <button
-                                    class="open-equipment-modal mt-auto w-full text-center bg-brand-deep-ash text-white font-bold py-2 px-4 rounded-lg hover:bg-brand-deep-ash-lighter transition duration-300"
-                                    data-id="EQ-OVN-002"
-                                    data-name="Double-Stack Convection Oven"
-                                    data-price="120"
-                                    data-image="https://images.pexels.com/photos/6207291/pexels-photo-6207291.jpeg?auto=compress&cs=tinysrgb&w=800"
-                                    data-description="Get consistent, professional results with our Double-Stack Electric Convection Oven. The fan-circulated air ensures even heat distribution, reducing cook times and eliminating hot spots. Each deck can hold five full-size sheet pans. Features simple digital controls and interior lights.">
-                                    View Details & Book
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Equipment Card 3: Refrigerated Prep Table -->
-                        <div
-                            class="equipment-card bg-white rounded-lg shadow-lg overflow-hidden flex flex-col transform hover:scale-[1.02] transition-transform duration-300 section-animate" style="animation-delay: 0.2s;">
-                            <img src="https://images.pexels.com/photos/8134105/pexels-photo-8134105.jpeg?auto=compress&cs=tinysrgb&w=600"
-                                alt="Refrigerated Prep Table" class="w-full equipment-card-image">
-                            <div class="p-6 flex flex-col flex-grow">
-                                <h3 class="text-2xl font-bold text-brand-deep-ash mb-2">72" Refrigerated Prep Table</h3>
-                                <p class="text-gray-600 mb-4 flex-grow">Keep ingredients cold and accessible. This three-door
-                                    prep table features a cutting board and multiple GN pan slots.</p>
-                                <p class="text-3xl font-bold text-brand-deep-ash mb-4">$95<span
-                                        class="text-lg font-normal text-gray-500"> / day</span></p>
-                                <button
-                                    class="open-equipment-modal mt-auto w-full text-center bg-brand-deep-ash text-white font-bold py-2 px-4 rounded-lg hover:bg-brand-deep-ash-lighter transition duration-300"
-                                    data-id="EQ-REF-003"
-                                    data-name="72&quot; Refrigerated Prep Table"
-                                    data-price="95"
-                                    data-image="https://images.pexels.com/photos/8134105/pexels-photo-8134105.jpeg?auto=compress&cs=tinysrgb&w=800"
-                                    data-description="Streamline your prep line with this 72-inch refrigerated sandwich/salad prep table. It provides ample cold storage below and a convenient top rail that holds up to 18 1/6-size pans (pans rented separately). The full-length cutting board gives you plenty of workspace.">
-                                    View Details & Book
-                                </button>
-                            </div>
-                        </div>
 
                         <!-- Add more cards as needed -->
                         
